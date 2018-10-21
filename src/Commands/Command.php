@@ -271,7 +271,13 @@ abstract class Command implements CommandInterface
             })
             ->implode('');
 
-        return "%/{$this->getName()}{$optionalBotName}{$required}{$optional}{$customRegex}%si";
+        $name = $this->getName();
+        if (count($this->getAliases()) > 0) {
+            $aliases = implode('|', $this->getAliases());
+            $name = "({$this->getName()}|{$aliases})";
+        }
+
+        return "%/{$name}{$optionalBotName}{$required}{$optional}{$customRegex}%si";
     }
 
     private function formatMatches(array $matches, Collection $required, Collection $optional)
